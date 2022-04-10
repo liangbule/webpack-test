@@ -6,17 +6,53 @@
  * @FilePath: /code/webpack/index.js
  */
 const path = require("path");
+const glob = require("glob");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+
+const setMPA = () => {
+  const entry = {};
+  const htmlWebpackPlugin = [];
+
+  const entryFiles = glob.sync(path.join(__dirname, "./src/*/index.js"));
+  Object.keys(entryFiles).map((index) => {
+    const entryFile = entryFiles[index];
+    const match = entryFile.match(/src\/(.*)\/index\.js/);
+    const pageName = match && match[1];
+    entry[pageName] = entryFile;
+    htmlWebpackPlugin.push(
+      // template title 无效
+      new HtmlWebpackPlugin({
+        title: "indexbuild",
+        template: path.join(__dirname, `src/${pageName}/index.html`),
+        filename: `${pageName}.html`,
+        // chunks: [pageName],
+        inject: true,
+        minify: {
+          html5: true,
+          collapseWhitespace: true,
+          preserveLineBreaks: false,
+          minifyCSS: true,
+          minifyJS: true,
+          removeComments: false,
+        },
+      })
+    );
+    console.log("pageName", pageName);
+  });
+  console.log("entryFiles", entryFiles);
+  return {
+    entry,
+    htmlWebpackPlugin,
+  };
+};
+const { entry, htmlWebpackPlugin } = setMPA();
 module.exports = {
   // 入口
   // entry: "./src/index.js",
-  entry: {
-    app: "./src/index.js",
-    adminApp: "./src/adminApp.js",
-  },
+  entry: entry,
   // 输出
   // output: {
   //   // 把所有依赖的模块合并输出到一个 bundle.js 文件
@@ -40,7 +76,7 @@ module.exports = {
       },
       {
         test: /.css$/,
-        use: [MiniCssExtractPlugin.loader, "css-loader",],
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
       {
         test: /.less$/,
@@ -50,22 +86,20 @@ module.exports = {
           "less-loader",
           // 兼容css前缀
           {
-            loader: 'postcss-loader',
+            loader: "postcss-loader",
             options: {
-              postcssOptions:{
-                plugins: [
-                  require('autoprefixer')
-                ]
-              }
-            }
+              postcssOptions: {
+                plugins: [require("autoprefixer")],
+              },
+            },
           },
           {
-            loader: 'px2rem-loader',
+            loader: "px2rem-loader",
             options: {
               remUnit: 75,
-              remPrecision: 8
-            }
-          }
+              remPrecision: 8,
+            },
+          },
         ],
       },
       // 开发环境
@@ -85,15 +119,15 @@ module.exports = {
       {
         test: /\.(jpg|png|jpeg|gif)$/,
         use: {
-          loader:'url-loader',
+          loader: "url-loader",
           options: {
-            limit: 8192,    //限制 8kb 以下使用base64
+            limit: 8192, //限制 8kb 以下使用base64
             esMoudle: false,
-            name: '[name]-[hash:8].[ext]',
+            name: "[name]-[hash:8].[ext]",
             // 打包到/images目录下
-            outputPath: 'images'
-          }
-        }
+            outputPath: "images",
+          },
+        },
       },
       {
         test: /.(woff|woff2|eot|ttf|tof)$/,
@@ -119,37 +153,6 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: "[name]_[contenthash:8].css",
     }),
-    new HtmlWebpackPlugin({
-      title: "不配置模板",
-      template: path.join(__dirname, "src/admin.html"),
-      filename: "admin.html",
-      // chunks: ['search'],
-      inject: true,
-      minify: {
-        html5: true,
-        collapseWhitespace: true,
-        preserveLineBreaks: false,
-        minifyCSS: true,
-        minifyJS: true,
-        removeComments: false,
-      },
-    }),
-    // template title 无效
-    new HtmlWebpackPlugin({
-      title: "indexbuild",
-      template: path.join(__dirname, "src/index.html"),
-      filename: "index.html",
-      chunks: ["index"],
-      inject: true,
-      minify: {
-        html5: true,
-        collapseWhitespace: true,
-        preserveLineBreaks: false,
-        minifyCSS: true,
-        minifyJS: true,
-        removeComments: false,
-      },
-    }),
     new CleanWebpackPlugin(),
-  ],
+  ].concat(htmlWebpackPlugin),
 };

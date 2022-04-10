@@ -92,3 +92,7 @@ npm install --save-dev postcss-loader postcss postcss-preset-env
 px2rem-loader   npm i px2rem-loader -D
 lib-flexible npm i lib-flexible -S
 页面渲染根据根元素的font-size值
+# 资源内联
+npm i raw-loader@0.5.1 -D
+# 多页面打包匹配
+npm i glob -D

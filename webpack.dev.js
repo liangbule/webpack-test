@@ -11,11 +11,11 @@ const webpack = require('webpack')
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 module.exports = {
   // 入口
-  // entry: "./src/index.js",
-  entry: {
-    app: "./src/index.js",
-    adminApp: "./src/adminApp.js"
-  },
+  entry: "./src/adminApp.js",
+  // entry: {
+  //   app: "./src/index.js",
+  //   adminApp: "./src/adminApp.js"
+  // },
   // 输出
   // output: {
   //   // 把所有依赖的模块合并输出到一个 bundle.js 文件

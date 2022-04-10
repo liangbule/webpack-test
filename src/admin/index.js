@@ -9,8 +9,7 @@
 import React from "react";
 import ReactDOM  from "react-dom";
 import {createRoot} from 'react-dom/client'
-import logo from '../src/assets/img/logo.png'
-import './index.css'
+import logo from '../assets/img/logo.png'
 import './admin.less'
 
 class Search extends React.Component{
