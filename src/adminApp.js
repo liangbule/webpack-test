@@ -9,7 +9,7 @@
 import React from "react";
 import ReactDOM  from "react-dom";
 import {createRoot} from 'react-dom/client'
-import logo from '../src/assets/img/logo.jpeg'
+import logo from '../src/assets/img/logo.png'
 import './index.css'
 import './admin.less'
 

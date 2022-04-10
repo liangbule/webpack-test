@@ -9363,8 +9363,8 @@ var react = __webpack_require__(466);
 var react_dom = __webpack_require__(116);
 // EXTERNAL MODULE: ./node_modules/react-dom/client.js
 var client = __webpack_require__(897);
-;// CONCATENATED MODULE: ./src/assets/img/logo.jpeg
-/* harmony default export */ const logo = (__webpack_require__.p + "logo_e075fb13.jpeg");
+;// CONCATENATED MODULE: ./src/assets/img/logo.png
+/* harmony default export */ const logo = (__webpack_require__.p + "logo_c1733184.png");
 ;// CONCATENATED MODULE: ./src/adminApp.js
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
