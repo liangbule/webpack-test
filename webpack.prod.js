@@ -104,7 +104,7 @@ module.exports = {
       },
       // 开发环境
       {
-        test: /\.(png|svg|jpg|gif|jpeg)$/,
+        test: /.(png|svg|jpg|gif|jpeg)$/,
         use: [
           {
             loader: "file-loader",
@@ -117,17 +117,18 @@ module.exports = {
       },
       // 生产环境
       {
-        test: /\.(jpg|png|jpeg|gif)$/,
-        use: {
+        test: /.(jpg|png|jpeg|gif)$/,
+        // use: 'file-loader'
+        use: [{
           loader: "url-loader",
           options: {
-            limit: 8192, //限制 8kb 以下使用base64
-            esMoudle: false,
-            name: "[name]-[hash:8].[ext]",
+            limit: 102400, //限制 8kb 以下使用base64
+            // esMoudle: false,
+            // name: "[name]_[hash:8].[ext]",
             // 打包到/images目录下
-            outputPath: "images",
+            // outputPath: "images",
           },
-        },
+        }],
       },
       {
         test: /.(woff|woff2|eot|ttf|tof)$/,
@@ -155,4 +156,5 @@ module.exports = {
     }),
     new CleanWebpackPlugin(),
   ].concat(htmlWebpackPlugin),
+  devtool: 'inline-source-map'
 };

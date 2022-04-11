@@ -7,11 +7,51 @@
  * @FilePath: /code/webpack/index.js
  */
 const path = require("path");
-const webpack = require('webpack')
+const webpack = require('webpack');
+const glob = require("glob");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+
+const setMPA = () => {
+  const entry = {};
+  const htmlWebpackPlugin = [];
+
+  const entryFiles = glob.sync(path.join(__dirname, "./src/*/index.js"));
+  Object.keys(entryFiles).map((index) => {
+    const entryFile = entryFiles[index];
+    const match = entryFile.match(/src\/(.*)\/index\.js/);
+    const pageName = match && match[1];
+    entry[pageName] = entryFile;
+    htmlWebpackPlugin.push(
+      // template title 无效
+      new HtmlWebpackPlugin({
+        title: "indexbuild",
+        template: path.join(__dirname, `src/${pageName}/index.html`),
+        filename: `${pageName}.html`,
+        // chunks: [pageName],
+        inject: true,
+        minify: {
+          html5: true,
+          collapseWhitespace: true,
+          preserveLineBreaks: false,
+          minifyCSS: true,
+          minifyJS: true,
+          removeComments: false,
+        },
+      })
+    );
+    console.log("pageName", pageName);
+  });
+  console.log("entryFiles", entryFiles);
+  return {
+    entry,
+    htmlWebpackPlugin,
+  };
+};
+const { entry, htmlWebpackPlugin } = setMPA();
 module.exports = {
   // 入口
-  entry: "./src/adminApp.js",
+  entry: entry,
   // entry: {
   //   app: "./src/index.js",
   //   adminApp: "./src/adminApp.js"
@@ -53,7 +93,7 @@ module.exports = {
         ]
       },
       {
-        test: /\.(png|svg|jpg|gif|jpeg)$/,
+        test: /.(png|svg|jpg|gif|jpeg)$/,
         use: [
           'file-loader'
         ]
@@ -63,7 +103,7 @@ module.exports = {
   plugins:[
     new webpack.HotModuleReplacementPlugin(),
     new CleanWebpackPlugin(),
-  ],
+  ].concat(htmlWebpackPlugin),
   /**
    * hot 开启热更新
    */
@@ -74,5 +114,6 @@ module.exports = {
     static: './dist',
     // open: true,
     port: 8080,
-  }
+  },
+  devtool: 'inline-source-map'
 };
