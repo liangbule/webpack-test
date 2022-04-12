@@ -28,7 +28,7 @@ const setMPA = () => {
         title: "indexbuild",
         template: path.join(__dirname, `src/${pageName}/index.html`),
         filename: `${pageName}.html`,
-        // chunks: [pageName],
+        chunks: [pageName],
         inject: true,
         minify: {
           html5: true,
@@ -119,16 +119,18 @@ module.exports = {
       {
         test: /.(jpg|png|jpeg|gif)$/,
         // use: 'file-loader'
-        use: [{
-          loader: "url-loader",
-          options: {
-            limit: 102400, //限制 8kb 以下使用base64
-            // esMoudle: false,
-            // name: "[name]_[hash:8].[ext]",
-            // 打包到/images目录下
-            // outputPath: "images",
+        use: [
+          {
+            loader: "url-loader",
+            options: {
+              limit: 102400, //限制 8kb 以下使用base64
+              // esMoudle: false,
+              // name: "[name]_[hash:8].[ext]",
+              // 打包到/images目录下
+              // outputPath: "images",
+            },
           },
-        }],
+        ],
       },
       {
         test: /.(woff|woff2|eot|ttf|tof)$/,
@@ -156,5 +158,29 @@ module.exports = {
     }),
     new CleanWebpackPlugin(),
   ].concat(htmlWebpackPlugin),
-  devtool: 'inline-source-map'
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        commons: {
+          test: /(react|react-dom)/,
+          name: "vendors",
+          chunks: "all",
+        },
+      },
+    },
+  },
+  // 拆分公共文件
+  optimization: {
+    splitChunks: {
+      minSize: 1000,
+      cacheGroups: {
+        commons: {
+          name: "commons",
+          chunks: "all",
+          minChunks: 3, // 引用次数
+        },
+      },
+    },
+  },
+  devtool: "inline-source-map",
 };

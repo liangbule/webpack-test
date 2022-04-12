@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM  from "react-dom";
+import '../../common';
 import {createRoot} from 'react-dom/client'
 import logo from '../assets/images/logo.jpeg'
 import './admin.less'

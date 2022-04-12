@@ -1,8 +1,9 @@
 import React from "react";
 import ReactDOM  from "react-dom";
-import {createRoot} from 'react-dom/client'
-import logo from '../assets/images/logo.jpeg'
-import './index.css'
+import {createRoot} from 'react-dom/client';
+import '../../common';
+import logo from '../assets/images/logo.jpeg';
+import './index.css';
 
 class Search extends React.Component{
     render(){
