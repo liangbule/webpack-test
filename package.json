@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --config webpack.prod.js",
-    "dev": "webpack-dev-server --config webpack.dev.js --open "
+    "dev": "cd config && webpack serve --config webpack.dev.js",
+    "build": "cd config && webpack --config webpack.prod.js"
   },
   "keywords": [],
   "author": "liangbule",
