@@ -4,7 +4,7 @@
  * @LastEditTime: 2022-04-09 23:59:51
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- * @FilePath: /code/webpack/index.js
+ * @FilePath: /code/webpack/index.tsx
  */
 const path = require("path");
 const webpack = require('webpack');
@@ -16,7 +16,7 @@ const setMPA = () => {
   const entry = {};
   const htmlWebpackPlugin = [];
 
-  const entryFiles = glob.sync(path.join(__dirname, "./src/*/index.js"));
+  const entryFiles = glob.sync(path.join(__dirname, "./src/*/index.tsx"));
   Object.keys(entryFiles).map((index) => {
     const entryFile = entryFiles[index];
     const match = entryFile.match(/src\/(.*)\/index\.js/);
@@ -53,7 +53,7 @@ module.exports = {
   // 入口
   entry: entry,
   // entry: {
-  //   app: "./src/index.js",
+  //   app: "./src/index.tsx",
   //   adminApp: "./src/adminApp.js"
   // },
   // 输出

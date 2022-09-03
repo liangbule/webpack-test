@@ -96,3 +96,9 @@ lib-flexible npm i lib-flexible -S
 npm i raw-loader@0.5.1 -D
 # 多页面打包匹配
 npm i glob -D
+# 优化打包体积 tree shaking
+
+# 
+npm i -D html-webpack-plugin
+
+#

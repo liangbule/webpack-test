@@ -3,7 +3,7 @@
  * @Date: 2022-04-09 11:06:54
  * @LastEditTime: 2022-04-09 23:59:51
  * @LastEditors: Please set LastEditors
- * @FilePath: /code/webpack/index.js
+ * @FilePath: /code/webpack/index.tsx
  */
 const path = require("path");
 const glob = require("glob");
@@ -16,7 +16,7 @@ const setMPA = () => {
   const entry = {};
   const htmlWebpackPlugin = [];
 
-  const entryFiles = glob.sync(path.join(__dirname, "./src/*/index.js"));
+  const entryFiles = glob.sync(path.join(__dirname, "./src/*/index.tsx"));
   Object.keys(entryFiles).map((index) => {
     const entryFile = entryFiles[index];
     const match = entryFile.match(/src\/(.*)\/index\.js/);
@@ -51,7 +51,7 @@ const setMPA = () => {
 const { entry, htmlWebpackPlugin } = setMPA();
 module.exports = {
   // 入口
-  // entry: "./src/index.js",
+  // entry: "./src/index.tsx",
   entry: entry,
   // 输出
   // output: {
