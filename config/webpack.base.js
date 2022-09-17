@@ -29,7 +29,11 @@ module.exports = {
     //    模式
     mode: "development",
     //入口
-    entry: '../src/index.js', // 相对路径
+    // entry: '../src/index.js', // 相对路径
+    entry: {
+        home: '../src/index.js',
+        personal: '../src/personal.js'
+    },
     // 输入
     output: {
         //    文件输出路径
