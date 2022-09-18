@@ -44,6 +44,10 @@ module.exports = merge(baseWebpackConfig, {
                 }
 
             }
+        },
+        // 缓存文件
+        runtimeChunk: {
+            name: (entrypoint) => `runtime-${entrypoint.name}.js`
         }
-    }
+    },
 })

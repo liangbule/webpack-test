@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserWebpackPlugin = require('terser-webpack-plugin') // 压缩js
 const ImageMinimizerWebpackPlugin = require('image-minimizer-webpack-plugin')
+const WorkboxPlugin = require('workbox-webpack-plugin');
 const threads = os.cpus().length
 console.log(threads)
 //自定义loader
@@ -13,6 +14,7 @@ const getStyleLoader = (pre) => {
     return [
         MiniCssExtractPlugin.loader, 'css-loader',
         {
+            // 配合packge.json 文件browserslist处理兼容问题
             loader: "postcss-loader",
             options: {
                 postcssOptions: {
@@ -31,15 +33,17 @@ module.exports = {
     //入口
     // entry: '../src/index.js', // 相对路径
     entry: {
-        home: '../src/index.js',
-        personal: '../src/personal.js'
-    },
+        home:'../src/homepage/index.js',
+        personal: '../src/personal/index.js'
+    }, // 相对路径
     // 输入
     output: {
         //    文件输出路径
         path: path.resolve(__dirname, '../dist'),
         //    文件名
-        filename: "js/main.js",
+        // filename: "js/main.js",
+        filename: "js/[name].js",
+        chunkFilename: "js/[name].chunk.js",
         clean: true
     },
     //    加载器
@@ -133,7 +137,7 @@ module.exports = {
                                 loader: 'babel-loader',
                                 options: {
                                     presets: ['@babel/preset-react'],
-                                    cacheDirectory: true,
+                                    cacheDirectory: true, // 开启缓存
                                     cacheCompression: false,
                                     plugins: ['@babel/plugin-transform-runtime']
                                 },
@@ -163,40 +167,46 @@ module.exports = {
         // new TerserWebpackPlugin({
         //     parallel: threads
         // })
+        new WorkboxPlugin.GenerateSW({
+            // these options encourage the ServiceWorkers to get in there fast
+            // and not allow any straggling "old" SWs to hang around
+            clientsClaim: true,
+            skipWaiting: true,
+        }),
     ],
     // 压缩操作
     optimization: {
-        minimizer: [
-            new CssMinimizerPlugin(),
-            new TerserWebpackPlugin({
-                parallel: threads
-            }),
-            new ImageMinimizerWebpackPlugin({
-                minimizer: {
-                    implementation: ImageMinimizerWebpackPlugin.imageminGenerate,
-                    options: {
-                        plugins: [
-                            ["gifsicle", {interlaced: true}],
-                            ["jpegtran", {progressive: true}],
-                            ["optipng", {optimizeationLevel: 5}],
-                            ["svgo",
-                                {
-                                    plugins: [
-                                        "prsset-default",
-                                        "prefixIds",
-                                        {
-                                            name: "sortAttrs",
-                                            params: {
-                                                xmInsOrder: "alphabetical"
-                                            }
-                                        }
-                                    ]
-                                }]
-                        ]
-                    }
-                }
-            })
-        ]
+        // minimizer: [
+        //     new CssMinimizerPlugin(),
+        //     new TerserWebpackPlugin({
+        //         parallel: threads
+        //     }),
+        //     new ImageMinimizerWebpackPlugin({
+        //         minimizer: {
+        //             implementation: ImageMinimizerWebpackPlugin.imageminGenerate,
+        //             options: {
+        //                 plugins: [
+        //                     ["gifsicle", {interlaced: true}],
+        //                     ["jpegtran", {progressive: true}],
+        //                     ["optipng", {optimizeationLevel: 5}],
+        //                     ["svgo",
+        //                         {
+        //                             plugins: [
+        //                                 "prsset-default",
+        //                                 "prefixIds",
+        //                                 {
+        //                                     name: "sortAttrs",
+        //                                     params: {
+        //                                         xmInsOrder: "alphabetical"
+        //                                     }
+        //                                 }
+        //                             ]
+        //                         }]
+        //                 ]
+        //             }
+        //         }
+        //     })
+        // ]
     },
     // 解析模块
     resolve: {
