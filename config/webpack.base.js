@@ -8,11 +8,12 @@ const TerserWebpackPlugin = require('terser-webpack-plugin') // 压缩js
 const ImageMinimizerWebpackPlugin = require('image-minimizer-webpack-plugin')
 const WorkboxPlugin = require('workbox-webpack-plugin');
 const threads = os.cpus().length
-console.log(threads)
+const cont = process.env.NODE_ENV === "production"
+console.log(threads, cont)
 //自定义loader
 const getStyleLoader = (pre) => {
     return [
-        MiniCssExtractPlugin.loader, 'css-loader',
+        cont ? MiniCssExtractPlugin.loader : "style-loader", 'css-loader',
         {
             // 配合packge.json 文件browserslist处理兼容问题
             loader: "postcss-loader",
@@ -31,15 +32,16 @@ module.exports = {
     //    模式
     mode: "development",
     //入口
-    // entry: '../src/index.js', // 相对路径
-    entry: {
-        home:'../src/homepage/index.js',
-        personal: '../src/personal/index.js'
-    }, // 相对路径
+    entry: '../src/index.js', // 相对路径
+    // entry: {
+    //     home:'../src/homepage/index.js',
+    //     personal: '../src/personal/index.js'
+    // },
+    // 相对路径
     // 输入
     output: {
         //    文件输出路径
-        path: path.resolve(__dirname, '../dist'),
+        path: cont ? path.resolve(__dirname, '../dist') : undefined,
         //    文件名
         // filename: "js/main.js",
         filename: "js/[name].js",
@@ -167,12 +169,13 @@ module.exports = {
         // new TerserWebpackPlugin({
         //     parallel: threads
         // })
-        new WorkboxPlugin.GenerateSW({
-            // these options encourage the ServiceWorkers to get in there fast
-            // and not allow any straggling "old" SWs to hang around
-            clientsClaim: true,
-            skipWaiting: true,
-        }),
+        //开启缓存
+        // new WorkboxPlugin.GenerateSW({
+        //     // these options encourage the ServiceWorkers to get in there fast
+        //     // and not allow any straggling "old" SWs to hang around
+        //     clientsClaim: true,
+        //     skipWaiting: true,
+        // }),
     ],
     // 压缩操作
     optimization: {
@@ -207,9 +210,10 @@ module.exports = {
         //         }
         //     })
         // ]
+        minimize: true,
     },
     // 解析模块
     resolve: {
-        extensions: ['*', '.js', '.jsx', ".json"],
+        extensions: ['*', '.js', '.jsx', ".json", "tsx"],
     },
 }

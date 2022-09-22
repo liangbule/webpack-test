@@ -1,8 +1,23 @@
+const path = require('path')
 const baseWebpackConfig = require('./webpack.base.js')//共有的配置
 const {merge} = require('webpack-merge')
+const CopyPlugin = require("copy-webpack-plugin");
 module.exports = merge(baseWebpackConfig, {
     "mode": "production",
     devtool: 'source-map',
+    plugins: [
+        new CopyPlugin({
+            patterns: [
+                {
+                    from: path.resolve(__dirname,"../public"), to: path.resolve(__dirname,"../dist"),
+                    globOptions: {
+                        ignore: ["**/index.html"],
+                    },
+                },
+
+            ],
+        }),
+    ],
     //开启css压缩
     optimization: {
         minimize: true,
@@ -31,19 +46,37 @@ module.exports = merge(baseWebpackConfig, {
             // },
             // 修改配置
             cacheGroups: { // 组，那些模块会打包到一个组
-                defaultVendors: { // 组名
-                    test: /[\\/]node_modules[\\/]/,  //需要打包到一起的模块
-                    priority: -10,// 权重越大越高
-                    reuseExistingChunk: true, // 如果当前chunk包含已从主包bundle中拆分出的模块
+                react:{
+                    test:/[\\/]node_modules[\\/]react(.*)?[\\/]/,
+                    name:'chunk-react',
+                    priority: 10,
                 },
-                default: { // 其他没有配置会使用上面默认配置
-                    minSize: 0, // 我们定义文件体积大小了，所以要改打包最小文件体积
-                    minChunks: 2, // 这里的minChunks权重更大
-                    priority: -20,
-                    reuseExistingChunk: true,
+                antd:{
+                    test:/[\\/]node_modules[\\/]antd[\\/]/,
+                    name:'chunk-antd',
+                    priority: 9,
+                },
+                libs:{
+                    test:/[\\/]node_modules[\\/]/,
+                    name:'chunk-libs',
+                    priority: 8,
                 }
-
-            }
+            },
+            // cacheGroups: { // 组，那些模块会打包到一个组
+            //     defaultVendors: { // 组名
+            //         test: /[\\/]node_modules[\\/]/,  //需要打包到一起的模块
+            //         priority: -10,// 权重越大越高
+            //         name: "chunk-comment.js",
+            //         reuseExistingChunk: true, // 如果当前chunk包含已从主包bundle中拆分出的模块
+            //     },
+            //     default: { // 其他没有配置会使用上面默认配置
+            //         minSize: 0, // 我们定义文件体积大小了，所以要改打包最小文件体积
+            //         minChunks: 2, // 这里的minChunks权重更大
+            //         priority: -20,
+            //         name: "chunk-comment.js",
+            //         reuseExistingChunk: true,
+            //     }
+            // }
         },
         // 缓存文件
         runtimeChunk: {
